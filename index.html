@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIK TOK DOWNLOADER 😈</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, 
+                #0f0c29 0%, 
+                #302b63 50%, 
+                #24243e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .neon-glow {
+            box-shadow: 
+                0 0 20px rgba(255, 0, 0, 0.3),
+                0 0 40px rgba(255, 0, 0, 0.2),
+                0 0 60px rgba(255, 0, 0, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, #FF0000, #FF0080, #FF00FF, #8000FF, #0000FF);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient 3s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .pulse-button {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-4 md:p-6">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-red-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-1000"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-500"></div>
+    </div>
+
+    <div class="glass-effect p-6 md:p-10 rounded-3xl w-full max-w-2xl z-10 border border-white/10">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <i class="fas fa-skull-crossbones text-4xl text-red-500"></i>
+                <h1 class="text-4xl md:text-6xl font-black tracking-tighter gradient-text">
+                    CYLEX HD V3
+                </h1>
+                <i class="fas fa-fire text-4xl text-orange-500"></i>
+            </div>
+            <p class="text-gray-300 text-sm md:text-base mb-2">
+                <span class="text-red-400 font-bold">ULTRA HD QUALITY</span> - Support 4K, 1080p, 720p
+            </p>
+            <div class="flex flex-wrap gap-2 justify-center mt-3">
+                <span class="px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full text-xs">NO WATERMARK</span>
+                <span class="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs">ULTRA HD</span>
+                <span class="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-xs">MP3 AUDIO</span>
+                <span class="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-xs">FULL METADATA</span>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="mb-8">
+            <div class="relative">
+                <i class="fas fa-link absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input 
+                    type="text" 
+                    id="urlInput" 
+                    placeholder="Paste TikTok link here (e.g., https://vm.tiktok.com/xxxxx)" 
+                    class="w-full bg-black/40 p-4 pl-12 rounded-xl border-2 border-gray-700 focus:border-red-500 focus:outline-none transition-all duration-300 text-base"
+                    autocomplete="off"
+                >
+                <button 
+                    onclick="clearInput()"
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                    id="clearBtn"
+                    style="display: none;"
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex items-center justify-between mt-2 px-2">
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="autoHD" class="w-4 h-4" checked>
+                    <label for="autoHD" class="text-sm text-gray-300">Auto HD Detection</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="getCover" class="w-4 h-4" checked>
+                    <label for="getCover" class="text-sm text-gray-300">Include Cover</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Button -->
+        <button 
+            onclick="startDownload()" 
+            id="downloadBtn"
+            class="w-full bg-gradient-to-r from-red-600 via-red-500 to-orange-500 p-4 rounded-xl font-bold text-lg md:text-xl hover:scale-[1.02] transition-all duration-300 neon-glow pulse-button flex items-center justify-center gap-3"
+        >
+            <i class="fas fa-download"></i>
+            <span>DOWNLOAD ULTRA HD NOW! 🚀</span>
+        </button>
+
+        <!-- Loading -->
+        <div id="loading" class="hidden mt-8 text-center">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+            <p class="text-lg font-semibold text-yellow-400">Hunting for MAX Quality...</p>
+            <p class="text-sm text-gray-400 mt-2" id="loadingText">Scanning video sources...</p>
+            <div class="w-full bg-gray-800 rounded-full h-2 mt-4 overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-red-500 to-orange-500 h-full rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="result" class="hidden mt-8 space-y-6">
+            <!-- Video Preview -->
+            <div id="videoPreview" class="hidden bg-black/40 rounded-2xl overflow-hidden border border-white/10">
+                <div class="p-4 flex items-center justify-between bg-black/60">
+                    <h3 class="font-bold text-lg"><i class="fas fa-play-circle mr-2 text-red-500"></i>Preview</h3>
+                    <button onclick="togglePreview()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <video id="previewPlayer" class="w-full h-64 object-cover" controls></video>
+            </div>
+
+            <!-- Video Info -->
+            <div class="glass-effect p-6 rounded-2xl">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-xl mb-1" id="videoTitle">Video Title</h3>
+                        <div class="flex flex-wrap gap-2 text-sm">
+                            <span class="px-2 py-1 bg-gray-800 rounded-md" id="videoAuthor"></span>
+                            <span class="px-2 py-1 bg-gray-800 rounded-md" id="videoDuration"></span>
+                            <span class="px-2 py-1 bg-gray-800 rounded-md" id="videoQuality"></span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-3xl font-bold text-green-400" id="videoSize">0 MB</p>
+                        <p class="text-sm text-gray-400">File Size</p>
+                    </div>
+                </div>
+
+                <!-- Download Options -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <!-- HD Video -->
+                    <div class="bg-gradient-to-br from-red-900/30 to-red-500/10 border border-red-500/30 p-4 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fas fa-film text-2xl text-red-500"></i>
+                            <div>
+                                <h4 class="font-bold">ULTRA HD VIDEO</h4>
+                                <p class="text-xs text-gray-300">Highest Quality Available</p>
+                            </div>
+                        </div>
+                        <a id="dlHD" href="#" target="_blank" 
+                           class="block w-full bg-gradient-to-r from-red-600 to-red-700 p-3 rounded-lg font-bold text-white text-center hover:opacity-90 transition-all">
+                            <i class="fas fa-download mr-2"></i>DOWNLOAD MP4
+                        </a>
+                        <div class="flex justify-between text-xs mt-3">
+                            <span><i class="fas fa-expand mr-1"></i><span id="hdResolution">1080p</span></span>
+                            <span><i class="fas fa-database mr-1"></i><span id="hdSize">0MB</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Audio -->
+                    <div class="bg-gradient-to-br from-blue-900/30 to-blue-500/10 border border-blue-500/30 p-4 rounded-xl">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fas fa-music text-2xl text-blue-500"></i>
+                            <div>
+                                <h4 class="font-bold">ORIGINAL AUDIO</h4>
+                                <p class="text-xs text-gray-300">High Quality MP3</p>
+                            </div>
+                        </div>
+                        <a id="dlMusic" href="#" target="_blank" 
+                           class="block w-full bg-gradient-to-r from-blue-600 to-blue-700 p-3 rounded-lg font-bold text-white text-center hover:opacity-90 transition-all">
+                            <i class="fas fa-download mr-2"></i>DOWNLOAD MP3
+                        </a>
+                        <div class="text-xs mt-3">
+                            <span><i class="fas fa-wave-square mr-1"></i>320kbps</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Options -->
+                <div class="mt-6 pt-6 border-t border-white/10">
+                    <div class="flex flex-wrap gap-3 justify-center">
+                        <button onclick="previewVideo()" class="px-4 py-2 bg-purple-600/30 border border-purple-500/50 rounded-lg hover:bg-purple-600/50">
+                            <i class="fas fa-eye mr-2"></i>Preview
+                        </button>
+                        <button onclick="copyLinks()" class="px-4 py-2 bg-green-600/30 border border-green-500/50 rounded-lg hover:bg-green-600/50">
+                            <i class="fas fa-copy mr-2"></i>Copy Links
+                        </button>
+                        <button onclick="downloadAll()" class="px-4 py-2 bg-red-600/30 border border-red-500/50 rounded-lg hover:bg-red-600/50">
+                            <i class="fas fa-boxes mr-2"></i>Download All
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="glass-effect p-4 rounded-xl">
+                    <p class="text-2xl font-bold text-red-400" id="statViews">0</p>
+                    <p class="text-xs text-gray-400">Views</p>
+                </div>
+                <div class="glass-effect p-4 rounded-xl">
+                    <p class="text-2xl font-bold text-green-400" id="statLikes">0</p>
+                    <p class="text-xs text-gray-400">Likes</p>
+                </div>
+                <div class="glass-effect p-4 rounded-xl">
+                    <p class="text-2xl font-bold text-blue-400" id="statComments">0</p>
+                    <p class="text-xs text-gray-400">Comments</p>
+                </div>
+                <div class="glass-effect p-4 rounded-xl">
+                    <p class="text-2xl font-bold text-purple-400" id="statShares">0</p>
+                    <p class="text-xs text-gray-400">Shares</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error -->
+        <div id="error" class="hidden mt-8 p-6 bg-red-900/30 border border-red-500/50 rounded-2xl text-center">
+            <i class="fas fa-exclamation-triangle text-3xl text-red-400 mb-3"></i>
+            <h3 class="font-bold text-lg mb-2" id="errorTitle">Error!</h3>
+            <p class="text-gray-300" id="errorMessage"></p>
+            <button onclick="retryDownload()" class="mt-4 px-6 py-2 bg-red-600 rounded-lg font-bold">
+                <i class="fas fa-redo mr-2"></i>Try Again
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-10 pt-6 border-t border-white/10 text-center text-gray-400 text-sm">
+            <p><i class="fas fa-code mr-1"></i> Coded by <span class="text-red-400 font-bold">Sall-Coder</span> | v3.0 Ultra HD</p>
+            <p class="mt-1">Supports: TikTok, Douyin, YouTube Shorts, Instagram Reels</p>
+            <div class="mt-4 flex justify-center gap-4">
+                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-telegram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const urlInput = document.getElementById('urlInput');
+        const clearBtn = document.getElementById('clearBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        const progressBar = document.getElementById('progressBar');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+        
+        // Variables
+        let currentVideoData = null;
+        let progressInterval = null;
+
+        // Clear input button
+        urlInput.addEventListener('input', function() {
+            clearBtn.style.display = this.value ? 'block' : 'none';
+        });
+
+        function clearInput() {
+            urlInput.value = '';
+            clearBtn.style.display = 'none';
+            urlInput.focus();
+        }
+
+        // Download function
+        async function startDownload() {
+            const url = urlInput.value.trim();
+            const autoHD = document.getElementById('autoHD').checked;
+            
+            if (!url) {
+                showError('Input Error', 'Masukin link TikTok dulu bang!');
+                return;
+            }
+
+            if (!url.includes('tiktok.com') && !url.includes('douyin') && !url.includes('youtube.com/shorts') && !url.includes('instagram.com/reel')) {
+                showError('Invalid Link', 'Link TikTok/Shorts/Reels aja yang bisa!');
+                return;
+            }
+
+            // Reset UI
+            result.classList.add('hidden');
+            error.classList.add('hidden');
+            loading.classList.remove('hidden');
+            downloadBtn.disabled = true;
+            
+            // Progress animation
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 90) progress = 90;
+                progressBar.style.width = progress + '%';
+                
+                // Update loading text
+                const texts = [
+                    "Scanning video sources...",
+                    "Finding HD quality...",
+                    "Extracting metadata...",
+                    "Preparing download...",
+                    "Almost there..."
+                ];
+                const randomText = texts[Math.floor(Math.random() * texts.length)];
+                loadingText.textContent = randomText;
+            }, 500);
+
+            try {
+                // Multiple API endpoints for redundancy
+                const endpoints = [
+                    `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}&hd=${autoHD ? 1 : 0}`,
+                    `https://tikwm.com/api/?url=${encodeURIComponent(url)}&hd=${autoHD ? 1 : 0}`,
+                    `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}&hd=${autoHD ? 1 : 0}`,
+                    `https://api.tiktokv.com/api/?url=${encodeURIComponent(url)}`
+                ];
+
+                let responseData = null;
+                
+                for (let endpoint of endpoints) {
+                    try {
+                        loadingText.textContent = `Trying API: ${new URL(endpoint).hostname}`;
+                        const response = await fetchWithTimeout(endpoint, { timeout: 10000 });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.code === 0 || data.code === 1 || data.data) {
+                                responseData = data;
+                                break;
+                            }
+                        }
+                    } catch (e) {
+                        console.log(`API failed: ${endpoint}`);
+                        continue;
+                    }
+                }
+
+                if (!responseData) {
+                    throw new Error('All APIs failed');
+                }
+
+                // Process data
+                processVideoData(responseData);
+
+            } catch (error) {
+                console.error('Download error:', error);
+                showError('Download Failed', 'Video gabisa diambil. Coba link lain atau coba lagi nanti.');
+            } finally {
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    loading.classList.add('hidden');
+                    downloadBtn.disabled = false;
+                }, 500);
+            }
+        }
+
+        function processVideoData(data) {
+            try {
+                const videoData = data.data || data;
+                
+                // Store for later use
+                currentVideoData = videoData;
+                
+                // Get HD video URL (priority: hdplay, play, wmplay)
+                let videoUrl = videoData.hdplay || videoData.play || videoData.wmplay || videoData.video;
+                
+                // Ensure full URL
+                if (videoUrl && !videoUrl.startsWith('http')) {
+                    videoUrl = 'https://www.tikwm.com' + videoUrl;
+                }
+                
+                // Get audio URL
+                let audioUrl = videoData.music || videoData.music_info?.play_url || videoData.music_info?.url;
+                if (audioUrl && !audioUrl.startsWith('http')) {
+                    audioUrl = 'https://www.tikwm.com' + audioUrl;
+                }
+                
+                // Update UI
+                document.getElementById('videoTitle').textContent = 
+                    videoData.title || videoData.desc || "TikTok Video";
+                
+                document.getElementById('videoAuthor').textContent = 
+                    videoData.author?.nickname || videoData.author || "Unknown";
+                
+                document.getElementById('videoDuration').textContent = 
+                    videoData.duration ? `${videoData.duration}s` : "N/A";
+                
+                // Determine quality
+                let quality = "HD";
+                if (videoUrl.includes('1080')) quality = "1080p";
+                else if (videoUrl.includes('720')) quality = "720p";
+                else if (videoUrl.includes('480')) quality = "480p";
+                
+                document.getElementById('videoQuality').textContent = quality;
+                document.getElementById('hdResolution').textContent = quality;
+                
+                // Estimate file size
+                const estimatedSize = videoData.duration ? (videoData.duration * 2.5).toFixed(1) : "?";
+                document.getElementById('videoSize').textContent = estimatedSize + " MB";
+                document.getElementById('hdSize').textContent = estimatedSize + "MB";
+                
+                // Set download links
+                const dlHD = document.getElementById('dlHD');
+                const dlMusic = document.getElementById('dlMusic');
+                
+                if (videoUrl) {
+                    dlHD.href = videoUrl;
+                    dlHD.download = `tiktok_hd_${Date.now()}.mp4`;
+                } else {
+                    dlHD.onclick = () => alert("Video URL not available");
+                }
+                
+                if (audioUrl) {
+                    dlMusic.href = audioUrl;
+                    dlMusic.download = `tiktok_audio_${Date.now()}.mp3`;
+                } else {
+                    dlMusic.onclick = () => alert("Audio URL not available");
+                }
+                
+                // Stats
+                document.getElementById('statViews').textContent = 
+                    formatNumber(videoData.play_count || videoData.playCount || 0);
+                document.getElementById('statLikes').textContent = 
+                    formatNumber(videoData.digg_count || videoData.likeCount || 0);
+                document.getElementById('statComments').textContent = 
+                    formatNumber(videoData.comment_count || videoData.commentCount || 0);
+                document.getElementById('statShares').textContent = 
+                    formatNumber(videoData.share_count || videoData.shareCount || 0);
+                
+                // Show result
+                result.classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Processing error:', error);
+                showError('Processing Error', 'Failed to process video data. Try another link.');
+            }
+        }
+
+        // Helper functions
+        function fetchWithTimeout(url, options = {}) {
+            const { timeout = 10000, ...fetchOptions } = options;
+            
+            return Promise.race([
+                fetch(url, fetchOptions),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Request timeout')), timeout)
+                )
+            ]);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num;
+        }
+
+        function showError(title, message) {
+            document.getElementById('errorTitle').textContent = title;
+            document.getElementById('errorMessage').textContent = message;
+            error.classList.remove('hidden');
+            result.classList.add('hidden');
+        }
+
+        function retryDownload() {
+            error.classList.add('hidden');
+            startDownload();
+        }
+
+        function previewVideo() {
+            const preview = document.getElementById('videoPreview');
+            const player = document.getElementById('previewPlayer');
+            
+            if (currentVideoData && currentVideoData.hdplay) {
+                player.src = currentVideoData.hdplay.startsWith('http') ? 
+                    currentVideoData.hdplay : 
+                    'https://www.tikwm.com' + currentVideoData.hdplay;
+                preview.classList.remove('hidden');
+                player.play();
+            }
+        }
+
+        function togglePreview() {
+            const preview = document.getElementById('videoPreview');
+            const player = document.getElementById('previewPlayer');
+            
+            player.pause();
+            preview.classList.toggle('hidden');
+        }
+
+        function copyLinks() {
+            const videoUrl = currentVideoData?.hdplay || currentVideoData?.play;
+            const audioUrl = currentVideoData?.music;
+            
+            const text = `TikTok Video:\n${videoUrl}\n\nAudio:\n${audioUrl}`;
+            
+            navigator.clipboard.writeText(text)
+                .then(() => alert('Links copied to clipboard!'))
+                .catch(() => alert('Failed to copy links'));
+        }
+
+        function downloadAll() {
+            const dlHD = document.getElementById('dlHD');
+            const dlMusic = document.getElementById('dlMusic');
+            
+            if (dlHD.href !== '#') dlHD.click();
+            setTimeout(() => {
+                if (dlMusic.href !== '#') dlMusic.click();
+            }, 1000);
+        }
+
+        // Auto-detect paste
+        urlInput.addEventListener('paste', (e) => {
+            setTimeout(() => {
+                if (urlInput.value.includes('tiktok.com')) {
+                    startDownload();
+                }
+            }, 100);
+        });
+
+        // Enter key to download
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startDownload();
+            }
+        });
+
+        // Initial focus
+        window.onload = function() {
+            urlInput.focus();
+        };
+    </script>
+</body>
+</html>
